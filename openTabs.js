@@ -14,15 +14,6 @@ addEventListener("DOMContentLoaded", () => {
         el.appendChild(a);
         ul.append(el);
       });
-      // data[groupName].pages.forEach((item) => {
-      //   browser.tabs.create({
-      //     url: item,
-      //   });
-      // });
-      // browser.tabs.remove(data[groupName].id);
-      // browser.storage.local.set({
-      // groupName: { pages: data[groupName].pages, id: undefined },
-      // });
     }
   });
 });

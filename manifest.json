@@ -5,8 +5,8 @@
   "description": "Allows you to group tabs in the bar menu.",
   "permissions": ["tabs", "tabHide", "activeTab", "storage", "menus"],
   "action": {
-    "default_title": "Whereami?",
-    "default_popup": "hello.html"
+    "default_title": "Create Tab",
+    "default_popup": "createTab.html"
   },
   "background": {
     "scripts": ["background.js"]
