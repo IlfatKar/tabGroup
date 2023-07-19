@@ -7,3 +7,5 @@
 - easy viewing of open groups
 - ability to quickly switch between groups
 
+#### Issues:
+- Tabs are not saved after restart
