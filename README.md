@@ -1,3 +1,9 @@
-# Firefox extension for tab grouping
+# [WIP] Firefox extension for tab grouping
 
-The ultimate goal is to create something similar to SimpleTab Group, but in the top tab bar
+### Features:
+- create new groups
+- combine several tabs into groups
+- auto hide tabs from non active group
+- easy viewing of open groups
+- ability to quickly switch between groups
+
