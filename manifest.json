@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Tab Groups",
+  "version": "1.0",
+  "description": "Allows you to group tabs in the bar menu.",
+  "permissions": ["tabs", "tabHide", "storage", "menus"],
+  "action": {
+    "default_title": "Whereami?",
+    "default_popup": "hello.html"
+  },
+  "background": {
+    "scripts": ["background.js"]
+  }
+}
