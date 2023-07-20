@@ -41,6 +41,31 @@
     return browser.storage.local.set({ active: group });
   };
 
+  browser.storage.local.get("groups").then(async (data) => {
+    if (!data.groups) return;
+    const res = { ...data.groups };
+    const groupsList =
+      (await browser.storage.local.get("groupsList")).groupsList || [];
+    const allTabs = await browser.tabs.query({});
+    for (const item of groupsList) {
+      const tabGroups = allTabs.filter(
+        (t) => t.title === "Tab group - " + item
+      );
+      if (tabGroups[0]) res[item].id = tabGroups[0].id;
+    }
+    for (const key in res) {
+      const arr = [];
+      res[key].pages.forEach(async (page) => {
+        const tab = allTabs.filter((item) => item.url === page.url);
+        if (tab[0]) arr.push(page);
+      });
+      res[key].pages = arr;
+    }
+    browser.storage.local.set({
+      groups: res,
+    });
+  });
+
   browser.menus.onShown.addListener(refreshMenu);
 
   browser.menus.onClicked.addListener(async (info, tab) => {
@@ -81,7 +106,7 @@
             const created = await browser.tabs.create({
               active: false,
               discarded: true,
-              title: "Tab Group - " + item,
+              title: "Tab group - " + item,
               index: 0,
               url: "/page.html?title=" + item,
             });
@@ -107,8 +132,46 @@
     }
   });
 
+  browser.tabs.onUpdated.addListener(
+    (oldTabId, _, newTab) => {
+      browser.storage.local.get("groups").then((data) => {
+        if (!data.groups) return;
+        const res = { ...data.groups };
+        for (const key in res) {
+          const arr = [];
+          res[key].pages.forEach((page) => {
+            if (page.id === oldTabId) {
+              arr.push({ ...page, url: newTab.url });
+            } else {
+              arr.push(page);
+            }
+          });
+          res[key].pages = arr;
+        }
+        browser.storage.local.set({
+          groups: res,
+        });
+      });
+    },
+    {
+      properties: ["url"],
+    }
+  );
+
   browser.tabs.onRemoved.addListener((tabid, { isWindowClosing }) => {
-    if (isWindowClosing) return;
+    if (isWindowClosing) {
+      browser.storage.local.get("groups").then((data) => {
+        if (!data.groups) return;
+        const res = { ...data.groups };
+        for (const key in res) {
+          res[key].id = null;
+        }
+        browser.storage.local.set({
+          groups: res,
+        });
+      });
+      return;
+    }
     browser.storage.local.get("groups").then((data) => {
       if (!data.groups) return;
       Object.keys(data.groups).forEach((key) => {
